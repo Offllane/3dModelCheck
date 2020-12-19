@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body style="background-color: darkgray">
+
+<script src="https://threejs.org/build/three.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.8, 1000);
+    camera.position.z = 14;
+    camera.position.y = 3;
+
+    renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    renderer.domElement.setAttribute('id', 'Car3DObj');
+    document.body.appendChild(renderer.domElement);
+
+    const aLight = new THREE.AmbientLight(0x404040, 1.2);
+    scene.add(aLight);
+
+    const pLight = new THREE.PointLight(0xFFFFFF, 1.2);
+    pLight.position.set(0, 3, 7);
+    scene.add(pLight);
+
+    let loader = new THREE.GLTFLoader();
+    let obj = null;
+
+    loader.load('./3d/scene.gltf', function (gltf) {
+      obj = gltf;
+      obj.scene.scale.set(0.02, 0.02, 0.02);
+
+      scene.add(obj.scene);
+    }, undefined, function (error) {
+      console.error(error);
+    })
+
+    var animate = function () {
+      requestAnimationFrame( animate );
+      if(obj)
+      obj.scene.rotation.y += 0.01;
+
+      renderer.render( scene, camera );
+    };
+    animate();
+</script>
+</body>
+</html>
+
